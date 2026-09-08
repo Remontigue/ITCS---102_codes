@@ -1,0 +1,12 @@
+import getpass
+
+username = 'General'
+password = 'Studentme12345'
+
+u = input("Enter Username ----->  ")
+p = getpass.getpass("Enter Password ----->  ")
+
+if username == u and password == p :
+	print("ACCESS GRANTED")
+else:
+	print("ACCESS DENIED")
