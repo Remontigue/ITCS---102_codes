@@ -2,7 +2,7 @@ from getpass import getpass
 
 isLogin = False
 
-While isLogin == False:
+while isLogin == False:
     username = input("Enter your username: ")
     password = getpass("Enter your password: ")
 
