@@ -6,9 +6,9 @@ while isLogin == False:
     username = input("Enter your username: ")
     password = getpass("Enter your password: ")
 
-    if username == "admin" and password == "password123":
+    if username == "general" and password == "123":
         print("Login successful!")
         isLogin = True
     else:
-        print("Invalid username or password. Please try again.")
+        print("Wrong username and password. Please dont try anymore.")
         isLogin = False
