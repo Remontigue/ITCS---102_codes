@@ -1,7 +1,7 @@
 # ============================================================
 # SNAKE GAME (pygame)
 # Arrow keys to move. Eat the food, don't hit yourself.
-# Run it: python snake_game.py (inside your activated venv)
+# Run it: python snake_game.py
 # ============================================================
 import random
 import pygame
@@ -12,19 +12,19 @@ import pygame
 GAME_TITLE = "Snake"
 CELL_SIZE = 20          # size of one square, in pixels
 GRID_WIDTH = 40         # how many squares across
-FPS = 90                # <--- LINE 12: animation frame rate (60, 120, etc.)
+FPS = 90                # animation frame rate (60, 90, 120, etc.)
 GRID_HEIGHT = 34        # how many squares down
-SPEED = 15               # moves per second: higher = faster snake
+SPEED = 50              # moves per second: higher = faster snake
 START_LENGTH = 3        # how long the snake is at the start
 POINTS_PER_FOOD = 1     # score for each food eaten
 GROW_PER_FOOD = 1       # how many squares the snake grows per food
-WALLS_KILL = True       # False = snake goes through walls to the other side
+WALLS_KILL = False      # False = snake goes through walls to the other side
 
 # Colors are (red, green, blue), each from 0 to 255
-BACKGROUND_COLOR = (20, 24, 38)
-GRID_COLOR = (32, 38, 56)
-SNAKE_COLOR = (50, 250, 170)
-HEAD_COLOR = (50, 150, 80)
+BACKGROUND_COLOR = (50, 54, 98)
+GRID_COLOR = (52, 28, 56)
+SNAKE_COLOR = (80, 250, 170)
+HEAD_COLOR = (40, 50, 60)
 FOOD_COLOR = (235, 80, 80)
 TEXT_COLOR = (240, 240, 240)
 
@@ -84,6 +84,8 @@ def draw_game(snake, food, score):
         draw_square(part, SNAKE_COLOR)
     draw_square(snake[0], HEAD_COLOR)
     draw_text("Score: " + str(score), 10)
+    fps_text = font.render("FPS: " + str(int(clock.get_fps())), True, TEXT_COLOR)
+    screen.blit(fps_text, (10, 10))
 
 # ============================================================
 # PART 4: THE GAME LOOP (events -> update -> draw)
@@ -92,8 +94,12 @@ snake, direction, food, score, grow = new_game()
 last_direction = direction
 game_over = False
 running = True
+move_timer = 0
 
 while running:
+    dt = clock.tick(FPS) / 1000.0
+    move_timer += dt
+
     # ---- 1. EVENTS: read the keyboard ----
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -104,6 +110,7 @@ while running:
                     snake, direction, food, score, grow = new_game()
                     last_direction = direction
                     game_over = False
+                    move_timer = 0
                 elif event.key == pygame.K_q:  # Q = quit
                     running = False
             # Check against last_direction to prevent instant 180-degree turns
@@ -117,7 +124,8 @@ while running:
                 direction = (1, 0)
 
     # ---- 2. UPDATE: move the snake and check what happened ----
-    if not game_over:
+    if not game_over and move_timer >= (1.0 / SPEED):
+        move_timer = 0
         last_direction = direction
         head_x, head_y = snake[0]
         new_head = (head_x + direction[0], head_y + direction[1])
@@ -150,6 +158,5 @@ while running:
         draw_text("Score: " + str(score) + "   R = play again   Q = quit", HEIGHT // 2)
 
     pygame.display.flip()
-    clock.tick(SPEED)
 
 pygame.quit()
